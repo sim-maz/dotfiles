@@ -1,0 +1,5 @@
+
+eval "$(rbenv init -)"
+
+source "${DEVTOOLS_PATH:-$HOME/vinted/dev-tools}/bin/shell_function.sh"
+alias config='/usr/bin/git --git-dir=/Users/smaziliauskas/.cfg/ --work-tree=/Users/smaziliauskas'

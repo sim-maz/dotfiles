@@ -1,0 +1,5 @@
+
+eval "$(rbenv init -)"
+
+source "${DEVTOOLS_PATH:-$HOME/vinted/dev-tools}/bin/shell_function.sh"
+complete -C /opt/homebrew/bin/bit bit
