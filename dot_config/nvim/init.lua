@@ -103,7 +103,6 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
-vim.cmd.colorscheme 'evening'
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -237,10 +236,19 @@ vim.keymap.set({ 'v', 's' }, '<PageDown>', scroll_lines .. '<C-e>', { noremap = 
 vim.keymap.set({ 'v', 's' }, '<PageUp>', scroll_lines .. '<C-y>', { noremap = true, silent = true })
 -- Map a key to copy the current file path to the clipboard
 
-vim.api.nvim_set_keymap('n', '<leader>cp', [[:let @+ = expand('%:p')<CR>]], { desc = 'Copy current file path', noremap = true, silent = true })
+vim.keymap.set('n', '<leader>cp', [[:let @+ = expand('%:p')<CR>]], { desc = 'Copy current file path', noremap = true, silent = true })
 -- Open file explorer on the side
-vim.api.nvim_set_keymap('n', '<leader>e', ':Neotree toggle<CR>', { noremap = true, silent = true })
-
+vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { noremap = true, silent = true })
+-- SnipRun keymaps
+vim.keymap.set('v', '<leader>r', '<Plug>SnipRun', { silent = true })
+vim.keymap.set('n', '<leader>r', '<Plug>SnipRun', { silent = true })
+vim.keymap.set('n', '<leader>f', '<Plug>SnipRunOperator', { silent = true })
+vim.keymap.set('n', '<a-p>', function()
+  require('illuminate').goto_next_reference()
+end)
+vim.keymap.set('n', '<a-n>', function()
+  require('illuminate').goto_prev_reference()
+end)
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 -- Highlight when yanking (copying) text
@@ -516,6 +524,38 @@ require('lazy').setup({
     end,
   },
   -- MY PLUGINS
+  -- return
+  {
+    'michaelb/sniprun',
+    branch = 'master',
+
+    build = 'sh install.sh',
+    -- do 'sh install.sh 1' if you want to force compile locally
+    -- (instead of fetching a binary from the github release). Requires Rust >= 1.65
+
+    config = function()
+      require('sniprun').setup {
+        -- your options
+      }
+    end,
+  },
+  {
+    'kevinhwang91/nvim-ufo',
+    dependencies = {
+      'kevinhwang91/promise-async',
+    },
+  },
+  {
+    'otavioschwanck/arrow.nvim',
+    dependencies = {
+      { 'nvim-tree/nvim-web-devicons' },
+    },
+    opts = {
+      show_icons = true,
+      leader_key = ';', -- Recommended to be a single key
+      buffer_leader_key = 'm', -- Per Buffer Mappings
+    },
+  },
   {
     'sim-maz/codeowners.nvim',
     config = function()
@@ -528,12 +568,40 @@ require('lazy').setup({
     config = function()
       require('lualine').setup {
         sections = {
+          lualine_c = {
+            {
+              'filename',
+              path = 0, -- 0: Just the filename, 1: Relative path, 2: Absolute path
+            },
+            {
+              'diagnostics',
+              sources = { 'nvim_diagnostic' },
+              symbols = { error = 'E', warn = 'W', info = 'I', hint = 'H' },
+            },
+          },
           lualine_x = {
+            {
+              function()
+                local statusline = require 'arrow.statusline'
+                return statusline.text_for_statusline_with_icon
+              end,
+            },
+            {
+              'filetype',
+              colored = true, -- Displays filetype icon in color if set to true
+              icon_only = true, -- Display only an icon for filetype
+              icon = { align = 'right' }, -- Align the icon to the right
+            },
+          },
+          lualine_y = {
             function()
               local owner = require('codeowners').get_buf_owner()
               return owner
             end,
           },
+        },
+        options = {
+          theme = 'dracula-nvim',
         },
       }
     end,
@@ -1421,7 +1489,7 @@ require('lazy').setup({
   --     vim.cmd.colorscheme 'tokyonight-moon'
   --   end,
   -- },
-  --
+  { 'Mofiqul/dracula.nvim' },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -1451,6 +1519,8 @@ require('lazy').setup({
           up = '<C-A-Up>',
         },
       }
+      require('mini.notify').setup()
+      require('mini.indentscope').setup()
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -1543,5 +1613,6 @@ require('lazy').setup({
     },
   },
 })
+vim.cmd.colorscheme 'dracula-soft'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
