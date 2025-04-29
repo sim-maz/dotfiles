@@ -1,5 +1,4 @@
 --[[
-
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -8,10 +7,11 @@
 ========         |.-""""""""""""""""""-.|   |-----|          ========
 ========         ||                    ||   | === |          ========
 ========         ||   KICKSTART.NVIM   ||   |-----|          ========
+
 ========         ||                    ||   | === |          ========
 ========         ||                    ||   |-----|          ========
-========         ||:Tutor              ||   |:::::|          ========
 ========         |'-..................-'|   |____o|          ========
+========         ||:Tutor              ||   |:::::|          ========
 ========         `"")----------------(""`   ___________      ========
 ========        /::::::::::|  |::::::::::\  \ no mouse \     ========
 ========       /:::========|  |==hjkl==:::\  \ required \    ========
@@ -165,6 +165,8 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
+--
+--
 vim.opt.scrolloff = 10
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
@@ -177,6 +179,7 @@ vim.opt.termguicolors = true
 -- [[ Basic Keymaps ]]
 
 --  See `:help vim.keymap.set()`
+--
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -212,7 +215,15 @@ vim.keymap.set('n', '<A-S-Right>', '<cmd>bn<CR>', { desc = 'Move buffer to the r
 vim.keymap.set('n', '<CR>', 'm`o<Esc>``')
 vim.keymap.set('n', '<S-CR>', 'm`O<Esc>``')
 vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, { noremap = true, silent = true })
+vim.keymap.set('n', '<C-Up>', '<cmd>move-2<CR>', { desc = 'Move current line up' })
+vim.keymap.set('n', '<C-Down>', '<cmd>move+<CR>', { desc = 'Move current line down' })
+vim.keymap.set('v', '<C-Up>', ":m '<-2'<CR>gv=gv", { desc = 'Move selected lines up' })
+vim.keymap.set('v', '<C-Down>', ":m '>+1'<CR>gv=gv", { desc = 'Move selected lines down' })
+vim.keymap.set('v', '>', '>gv', { desc = 'Indent selected lines right' })
+vim.keymap.set('v', '<', '<gv', { desc = 'Indent selected lines left' })
+
 local scroll_lines = 5
+
 -- Map PageDown to scroll down by 'scroll_lines'
 -- 'n' stands for Normal mode
 -- '<C-e>' is the command to scroll the window down one line
@@ -243,12 +254,12 @@ vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { noremap = true, silent
 vim.keymap.set('v', '<leader>r', '<Plug>SnipRun', { silent = true })
 vim.keymap.set('n', '<leader>r', '<Plug>SnipRun', { silent = true })
 vim.keymap.set('n', '<leader>f', '<Plug>SnipRunOperator', { silent = true })
-vim.keymap.set('n', '<a-p>', function()
+vim.keymap.set('n', '<leader>o', function()
   require('illuminate').goto_next_reference()
-end)
-vim.keymap.set('n', '<a-n>', function()
+end, { desc = 'Go to next reference of underline text' })
+vim.keymap.set('n', '<leader>O', function()
   require('illuminate').goto_prev_reference()
-end)
+end, { desc = 'Go to previous reference of underline text' })
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 -- Highlight when yanking (copying) text
@@ -262,8 +273,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- Create an augroup for autosave
 vim.api.nvim_create_augroup('AutoSave', { clear = true })
+-- Create an augroup for autosave
 
 -- Define the autocommand for autosaving
 vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertLeave' }, {
@@ -292,6 +303,7 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
+--
 --
 --  To check the current status of your plugins, run
 --    :Lazy
@@ -563,6 +575,30 @@ require('lazy').setup({
     end,
   },
   {
+    'rmagatti/auto-session',
+    lazy = false,
+
+    ---enables autocomplete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    opts = {
+      suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+      -- log_level = 'debug',
+    },
+  },
+  {
+    'f-person/git-blame.nvim',
+    lazy = false,
+    config = function()
+      require('gitblame').setup {
+        enabled = true, -- if you want to enable the plugin
+        message_template = ' <summary> • <date> • <author> • <<sha>>', -- template for the blame message, check the Message template section for more options
+        date_format = '%m-%d-%Y %H:%M:%S', -- template for the date, check Date format section for more options
+        virtual_text_column = 1, -- virtual text start column, check Start virtual text at column section for more options
+      }
+    end,
+  },
+  {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
@@ -580,12 +616,6 @@ require('lazy').setup({
             },
           },
           lualine_x = {
-            {
-              function()
-                local statusline = require 'arrow.statusline'
-                return statusline.text_for_statusline_with_icon
-              end,
-            },
             {
               'filetype',
               colored = true, -- Displays filetype icon in color if set to true
@@ -1011,6 +1041,7 @@ require('lazy').setup({
           require('other-nvim').open()
         end,
         mode = 'n',
+        desc = '[C]ode [o]ther spec file in same window',
       },
       {
         '<leader>cO',
@@ -1018,6 +1049,7 @@ require('lazy').setup({
           require('other-nvim').openVSplit()
         end,
         mode = 'n',
+        desc = '[C]ode [O]ther spec file in split window',
       },
     },
   },
@@ -1423,8 +1455,8 @@ require('lazy').setup({
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
           ['<CR>'] = cmp.mapping.confirm { select = true },
-          ['<Tab>'] = cmp.mapping.select_next_item(),
-          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          ['<Down>'] = cmp.mapping.select_next_item(),
+          ['<Up>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -1519,8 +1551,10 @@ require('lazy').setup({
           up = '<C-A-Up>',
         },
       }
+      require('mini.pairs').setup()
+
       require('mini.notify').setup()
-      require('mini.indentscope').setup()
+      -- require('mini.indentscope').setup()
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
