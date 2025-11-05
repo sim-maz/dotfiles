@@ -100,4 +100,4 @@
 [commit]
 	template = /Users/smaziliauskas/.stCommitMsg
 [url "git@github.com:"]
-	insteadOf = https://github.com/
+	insteadof = https://github.com/
