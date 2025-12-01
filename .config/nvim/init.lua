@@ -148,7 +148,7 @@ require('lazy').setup({
 
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.autopairs',
+  -- require 'kickstart.plugins.autopairs', -- Disabled: using mini.pairs instead (conflict causes DEL key issues)
 
   -- This is where the plugins are defined: /lua/custom/plugins/init.lua
   { import = 'custom.plugins' },

@@ -151,19 +151,27 @@ return {
   },]]
   --
   {
-  "folke/snacks.nvim",
-  opts = {
-    picker = {
-      enabled = true,
-    },
-    explorer = {
-      enabled = true,
-      -- Disable watch to avoid the error
-      watch = {
-        enabled = false,
+    "folke/snacks.nvim",
+    lazy = false, -- Ensure snacks is always loaded
+    opts = {
+      picker = {
+        enabled = true,
+      },
+      explorer = {
+        enabled = true,
+        -- Disable watch to avoid the error
+        watch = {
+          enabled = false,
+        },
       },
     },
-  },
+    config = function(_, opts)
+      require('snacks').setup(opts)
+      -- Ensure Snacks global is available
+      if not Snacks then
+        Snacks = require('snacks')
+      end
+    end,
   keys = {
     -- Top Pickers & Explorer
     { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },

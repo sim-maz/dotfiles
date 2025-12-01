@@ -143,7 +143,7 @@ alias gitconfig="code ~/.gitconfig"
 alias zshconfig="code ~/.zshrc"
 alias nvimconfig="nvim ~/config/nvim"
 alias ohmyzsh="code ~/.oh-my-zsh"
-alias gitdf='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 export GOPATH="$HOME/go"
 export GOPRIVATE="github.com/vinted"

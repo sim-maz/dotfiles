@@ -58,17 +58,30 @@ return {
             mode = mode or 'n'
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
-          map('gd', function() Snacks.picker.lsp_definitions() end, '[G]oto [D]efinition')
+          
+          -- Ensure Snacks is loaded before using it
+          local snacks = Snacks
+          if not snacks then
+            local ok, snacks_module = pcall(require, 'snacks')
+            if ok then
+              snacks = snacks_module
+            else
+              vim.notify('Snacks not available', vim.log.levels.WARN)
+              return
+            end
+          end
+          
+          map('gd', function() snacks.picker.lsp_definitions() end, '[G]oto [D]efinition')
 
-          map('gr', function() Snacks.picker.lsp_references() end, '[G]oto [R]eferences')
+          map('gr', function() snacks.picker.lsp_references() end, '[G]oto [R]eferences')
 
-          map('gI', function() Snacks.picker.lsp_implementations() end, '[G]oto [I]mplementation')
+          map('gI', function() snacks.picker.lsp_implementations() end, '[G]oto [I]mplementation')
 
-          map('<leader>D', function() Snacks.picker.lsp_type_definitions() end, 'Type [D]efinition')
+          map('<leader>D', function() snacks.picker.lsp_type_definitions() end, 'Type [D]efinition')
 
-          map('<leader>ds', function() Snacks.picker.lsp_symbols() end, '[D]ocument [S]ymbols')
+          map('<leader>ds', function() snacks.picker.lsp_symbols() end, '[D]ocument [S]ymbols')
 
-          map('<leader>ws', function() Snacks.picker.lsp_workspace_symbols() end, '[W]orkspace [S]ymbols')
+          map('<leader>ws', function() snacks.picker.lsp_workspace_symbols() end, '[W]orkspace [S]ymbols')
 
           map('gR', vim.lsp.buf.rename, '[R]e[n]ame')
 
