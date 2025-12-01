@@ -141,4 +141,25 @@ return {
     },
     opts_extend = { 'sources.default' },
   },
+
+  {
+    "folke/snacks.nvim",
+    lazy = false, -- Ensure snacks is always loaded
+    opts = {
+      scratch = {
+        enabled = true,
+      },
+    },
+    config = function(_, opts)
+      require('snacks').setup(opts)
+      -- Ensure Snacks global is available
+      if not Snacks then
+        Snacks = require('snacks')
+      end
+    end,
+    keys = {
+     { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scracth buffers" },
+     { "<leader>s.", function() Snacks.scratch.select() end, desc = "Select Scracth buffers" },
+    },
+  }
 }
