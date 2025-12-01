@@ -32,79 +32,79 @@ chmod +x ~/dotfiles-cleanup.sh
 
 ## What the Migration Script Does
 
-1. Adds a `gitdf` alias to your `.bashrc` and `.zshrc`
+1. Adds a `dotfiles` alias to your `.bashrc` and `.zshrc`
 2. Adds `.cfg` to your `.gitignore`
 3. Clones the dotfiles repository as a bare repo to `~/.cfg`
 4. Checks out your dotfiles to your home directory
 5. Backs up any conflicting files to `~/.config-backup`
 6. Configures Git to hide untracked files
 
-## Using `gitdf` to Manage Dotfiles
+## Using `dotfiles` to Manage Dotfiles
 
-After installation, use the `gitdf` command instead of `git` to manage your dotfiles:
+After installation, use the `dotfiles` command instead of `git` to manage your dotfiles:
 
 ### Check Status
 ```bash
-gitdf status
+dotfiles status
 ```
 
 ### Add Files
 ```bash
 # Add a single file
-gitdf add .vimrc
+dotfiles add .vimrc
 
 # Add multiple files
-gitdf add .bashrc .zshrc .tmux.conf
+dotfiles add .bashrc .zshrc .tmux.conf
 ```
 
 ### Commit Changes
 ```bash
-gitdf commit -m "Update vim configuration"
+dotfiles commit -m "Update vim configuration"
 ```
 
 ### Push to Remote
 ```bash
-gitdf push
+dotfiles push
 ```
 
 ### Pull Latest Changes
 ```bash
-gitdf pull
+dotfiles pull
 ```
 
 ### View History
 ```bash
-gitdf log
+dotfiles log
 ```
 
 ### See Differences
 ```bash
 # See all changes
-gitdf diff
+dotfiles diff
 
 # See changes for a specific file
-gitdf diff .vimrc
+dotfiles diff .vimrc
 ```
 
 ### Add New Files
 ```bash
 # Stage a new dotfile
-gitdf add .config/nvim/init.vim
-gitdf commit -m "Add neovim config"
-gitdf push
+dotfiles add .config/nvim/init.vim
+dotfiles commit -m "Add neovim config"
+dotfiles push
 ```
 
 ## Important Notes
 
-- The `gitdf` alias works exactly like `git`, but it's specifically for your dotfiles
-- Only files you explicitly add with `gitdf add` are tracked
-- Untracked files in your home directory are hidden by default (won't clutter `gitdf status`)
-- After installation, restart your terminal or run: `alias gitdf='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'`
+- The `dotfiles` alias works exactly like `git`, but it's specifically for your dotfiles
+- Only files you explicitly add with `dotfiles add` are tracked
+- Untracked files in your home directory are hidden by default (won't clutter `dotfiles status`)
+- After installation, restart your terminal or run: `alias dotfiles='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'`
 
 ## What the Cleanup Script Does
 
 1. Removes the `~/.cfg` bare repository
-2. Removes the `gitdf` alias from shell configuration files
+2. Removes the `dotfiles` alias from shell configuration files
 3. Removes `.cfg` from `.gitignore`
 4. Optionally removes the backup directory
 5. Creates timestamped backups of modified configuration files
@@ -114,7 +114,7 @@ gitdf push
 ### Alias not found after installation
 Restart your terminal or manually run:
 ```bash
-alias gitdf='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 ```
 
 ### Conflicts during installation
