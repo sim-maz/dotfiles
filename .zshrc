@@ -144,7 +144,7 @@ alias zshconfig="code ~/.zshrc"
 alias nvimconfig="nvim ~/config/nvim"
 alias ohmyzsh="code ~/.oh-my-zsh"
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-
+alias jira="jiratui ui --theme dracula"
 export GOPATH="$HOME/go"
 export GOPRIVATE="github.com/vinted"
 export GONOSUMDB="github.com/vinted"
@@ -166,3 +166,4 @@ source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 autoload -U compinit && compinit -u
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
