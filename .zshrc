@@ -138,7 +138,7 @@ alias sandbox_console='kube-sh --context sandbox2 --namespace core --pod_matcher
 #other aliases
 
 alias tree="find . -print | sed -e 's;[^/]*/;|----;g;s;____|; |;g'"
-alias e="eza --icons"
+alias ez="eza --icons=always --group-directories-first"
 alias gitconfig="code ~/.gitconfig"
 alias zshconfig="code ~/.zshrc"
 alias nvimconfig="nvim ~/config/nvim"
